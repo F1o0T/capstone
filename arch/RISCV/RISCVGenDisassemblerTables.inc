@@ -1038,7 +1038,35 @@ static const uint8_t DecoderTable32[] = {
 /* 3930 */    MCD_OPC_Decode, 138, 2, 60, // Opcode: CSRRSI
 /* 3934 */    MCD_OPC_FilterValue, 7, 4, 0, 0, // Skip to: 3943
 /* 3939 */    MCD_OPC_Decode, 136, 2, 60, // Opcode: CSRRCI
-/* 3943 */    MCD_OPC_Fail,
+/* 3943 */    MCD_OPC_ExtractField, 0, 7, 
+/* 3946 */    MCD_OPC_FilterValue, 19, 20, 0, 0, // Skip to: 
+/* 3951 */    MCD_OPC_ExtractField, 12, 3,  
+/* 3954 */    MCD_OPC_FilterValue, 1, 14, 0, 0, // Skip to: 
+/* 3959 */    MCD_OPC_ExtractField, 20, 5, 
+/* 3962 */    MCD_OPC_FilterValue, 5, 4, 0, 0, // Skip to: 
+/* 3967 */    MCD_OPC_Decode, 194, 3, 64, // Opcode: SEXT_H
+/* 3971 */    MCD_OPC_ExtractField, 0, 7, 
+/* 3974 */    MCD_OPC_FilterValue, 19, 20, 0, 0, // Skip to: 
+/* 3979 */    MCD_OPC_ExtractField, 12, 3,
+/* 3982 */    MCD_OPC_FilterValue, 1, 14, 0, 0, // Skip to: 
+/* 3987 */    MCD_OPC_ExtractField, 20, 5, 
+/* 3990 */    MCD_OPC_FilterValue, 4, 4, 0, 0, // Skip to: 
+/* 3995 */    MCD_OPC_Decode, 195, 3, 65, // Opcode: SEXT_B
+/* 3999 */    MCD_OPC_ExtractField, 0, 7, 
+/* 4002 */    MCD_OPC_FilterValue, 19, 20, 0, 0, // Skip to: 
+/* 4007 */    MCD_OPC_ExtractField, 12, 3,
+/* 4010 */    MCD_OPC_FilterValue, 1, 14, 0, 0, // Skip to: 
+/* 4015 */    MCD_OPC_ExtractField, 20, 5, 
+/* 4018 */    MCD_OPC_FilterValue, 2, 4, 0, 0, // Skip to: 
+/* 4023 */    MCD_OPC_Decode, 196, 3, 66, // Opcode: CPOP
+/* 4027 */    MCD_OPC_ExtractField, 0, 7, 
+/* 4030 */    MCD_OPC_FilterValue, 51, 20, 0, 0, // Skip to: 
+/* 4035 */    MCD_OPC_ExtractField, 12, 3,
+/* 4038 */    MCD_OPC_FilterValue, 4, 14, 0, 0, // Skip to: 
+/* 4043 */    MCD_OPC_ExtractField, 25, 7, 
+/* 4046 */    MCD_OPC_FilterValue, 4, 4, 0, 0, // Skip to: 
+/* 4051 */    MCD_OPC_Decode, 197, 3, 67, // Opcode: PACK
+/* 4055 */    MCD_OPC_Fail,
   0
 };
 
@@ -1649,6 +1677,32 @@ static DecodeStatus fname(DecodeStatus S, unsigned Idx, InsnType insn, MCInst *M
     tmp |= fieldname(insn, 9, 4) << 2; \
     if (decodeUImmOperand(MI, tmp, Address, Decoder, 8) == MCDisassembler_Fail) return MCDisassembler_Fail; \
     return S; \
+  case 64: \
+    tmp = fieldFromInstruction(insn, 7, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    tmp = fieldFromInstruction(insn, 15, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    return S; \
+  case 65: \
+    tmp = fieldFromInstruction(insn, 7, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    tmp = fieldFromInstruction(insn, 15, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    return S; \
+  case 66: \
+    tmp = fieldFromInstruction(insn, 7, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    tmp = fieldFromInstruction(insn, 15, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    return S; \
+  case 67: \
+    tmp = fieldFromInstruction(insn, 7, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    tmp = fieldFromInstruction(insn, 15, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    tmp = fieldFromInstruction(insn, 20, 5); \
+    if (DecodeGPRRegisterClass(MI, tmp, Address, Decoder) == MCDisassembler_Fail) return MCDisassembler_Fail; \
+    return S; \
   } \
 }
 
@@ -1720,7 +1774,7 @@ static DecodeStatus fname(const uint8_t DecodeTable[], MCInst *MI,\
 \
       MCInst_clear(MI);\
       MCInst_setOpcode(MI, Opc);\
-      bool DecodeComplete = false;\
+      bool DecodeComplete;\
       S = decoder(S, DecodeIdx, insn, MI, Address, DisAsm, &DecodeComplete);\
       CS_ASSERT(DecodeComplete);\
 \
@@ -1738,7 +1792,7 @@ static DecodeStatus fname(const uint8_t DecodeTable[], MCInst *MI,\
 \
       MCInst TmpMI;\
       MCInst_setOpcode(&TmpMI, Opc);\
-      bool DecodeComplete = false;\
+      bool DecodeComplete;\
       S = decoder(S, DecodeIdx, insn, &TmpMI, Address, DisAsm, &DecodeComplete);\
 \
       if (DecodeComplete) {\

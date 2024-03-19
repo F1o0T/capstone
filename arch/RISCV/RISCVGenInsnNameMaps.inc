@@ -273,3 +273,8 @@
 	{ RISCV_INS_WFI, "wfi" },
 	{ RISCV_INS_XOR, "xor" },
 	{ RISCV_INS_XORI, "xori" },
+	{ RISCV_INS_SEXT_H, "sext.h" },
+	{ RISCV_INS_SEXT_H, "sext.b" },
+	{ RISCV_INS_SEXT_H, "cpop" },
+	{ RISCV_INS_SEXT_H, "pack" },
+	

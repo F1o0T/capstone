@@ -1633,3 +1633,27 @@
 	{ 0 }, { 0 }, { 0 }, 0, 0
 #endif
 },
+{
+	RISCV_SEXT_H, RISCV_INS_SEXT_H,
+#ifndef CAPSTONE_DIET
+	{ 0 }, { 0 }, { 0 }, 0, 0
+#endif
+},
+{
+	RISCV_SEXT_B, RISCV_INS_SEXT_B,
+#ifndef CAPSTONE_DIET
+	{ 0 }, { 0 }, { 0 }, 0, 0
+#endif
+},
+{
+	RISCV_CPOP, RISCV_INS_CPOP,
+#ifndef CAPSTONE_DIET
+	{ 0 }, { 0 }, { 0 }, 0, 0
+#endif
+},
+{
+	RISCV_PACK, RISCV_INS_PACK,
+#ifndef CAPSTONE_DIET
+	{ 0 }, { 0 }, { 0 }, 0, 0
+#endif
+},

@@ -277,6 +277,10 @@ static void printInstruction(MCInst *MI, SStream *O, MCRegisterInfo *MRI)
   /* 2466 */ 'D', 'B', 'G', '_', 'L', 'A', 'B', 'E', 'L', 0,
   /* 2476 */ 'L', 'I', 'F', 'E', 'T', 'I', 'M', 'E', '_', 'S', 'T', 'A', 'R', 'T', 0,
   /* 2491 */ '#', 32, 'F', 'E', 'n', 't', 'r', 'y', 32, 'c', 'a', 'l', 'l', 0,
+  /* 2506 */ 's', 'e', 'x', 't', '.', 'h', 9, 0,
+  /* 2514 */ 's', 'e', 'x', 't', '.', 'b', 9, 0, 
+  /* 2522 */ 'c', 'p', 'o', 'p', 9, 0,
+  /* 2528 */ 'p', 'a', 'c', 'k', 9, 0,
   };
 #endif
 
@@ -731,6 +735,10 @@ static void printInstruction(MCInst *MI, SStream *O, MCRegisterInfo *MRI)
     480U,	// WFI
     22109U,	// XOR
     20987U,	// XORI
+    22986U, // SEXT.H
+    22994U, // SEXT.B
+    23002U, // CPOP  
+    23008U, // PACK  
   };
 
   static const uint8_t OpInfo1[] = {
@@ -1184,6 +1192,10 @@ static void printInstruction(MCInst *MI, SStream *O, MCRegisterInfo *MRI)
     0U,	// WFI
     4U,	// XOR
     4U,	// XORI
+    0U, // SEXT_H 
+    0U, // SEXT_B 
+    0U, // CPOP   
+    4U, // PACK   
   };
 
   // Emit the opcode for the instruction.
@@ -1197,7 +1209,7 @@ static void printInstruction(MCInst *MI, SStream *O, MCRegisterInfo *MRI)
 
 
   // Fragment 0 encoded into 2 bits for 4 unique commands.
-  switch ((uint32_t)((Bits >> 12) & 3)) {
+  switch ((Bits >> 12) & 3) {
   default: CS_ASSERT(0 && "Invalid command number.");
   case 0:
     // DBG_VALUE, DBG_LABEL, BUNDLE, LIFETIME_START, LIFETIME_END, FENTRY_CAL...
@@ -1225,7 +1237,7 @@ static void printInstruction(MCInst *MI, SStream *O, MCRegisterInfo *MRI)
 
 
   // Fragment 1 encoded into 2 bits for 3 unique commands.
-  switch ((uint32_t)((Bits >> 14) & 3)) {
+  switch ((Bits >> 14) & 3) {
   default: CS_ASSERT(0 && "Invalid command number.");
   case 0:
     // PseudoCALL, PseudoTAIL, C_J, C_JAL, C_JALR, C_JR
@@ -1246,7 +1258,7 @@ static void printInstruction(MCInst *MI, SStream *O, MCRegisterInfo *MRI)
 
 
   // Fragment 2 encoded into 2 bits for 3 unique commands.
-  switch ((uint32_t)((Bits >> 16) & 3)) {
+  switch ((Bits >> 16) & 3) {
   default: CS_ASSERT(0 && "Invalid command number.");
   case 0:
     // PseudoLA, PseudoLI, PseudoLLA, ADD, ADDI, ADDIW, ADDW, AND, ANDI, AUIP...
@@ -1267,7 +1279,7 @@ static void printInstruction(MCInst *MI, SStream *O, MCRegisterInfo *MRI)
 
 
   // Fragment 3 encoded into 2 bits for 4 unique commands.
-  switch ((uint32_t)((Bits >> 18) & 3)) {
+  switch ((Bits >> 18) & 3) {
   default: CS_ASSERT(0 && "Invalid command number.");
   case 0:
     // PseudoLA, PseudoLI, PseudoLLA, AUIPC, C_BEQZ, C_BNEZ, C_LI, C_LUI, C_M...

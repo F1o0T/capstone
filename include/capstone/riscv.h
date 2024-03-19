@@ -473,7 +473,10 @@ typedef enum riscv_insn {
   	RISCV_INS_WFI,
   	RISCV_INS_XOR,
   	RISCV_INS_XORI,	
-	
+	RISCV_INS_SEXT_H,
+	RISCV_INS_SEXT_B,
+	RISCV_INS_CPOP,
+	RISCV_INS_PACK,
   	RISCV_INS_ENDING,
 } riscv_insn;
 
